@@ -25,7 +25,7 @@ Import
 
 Bindings
   : Default
-  | Named
+  | NamedBindings
   | Default ',' NamedBindings
     { $$ = $Default.concat($NamedBindings); }
   ;

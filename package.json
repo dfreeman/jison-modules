@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "core-object": "^1.1.0",
-    "ebnf-parser": "dfreeman/ebnf-parser#16ebe4f068cfa2227b03a41afca3d297bc02ee39",
+    "ebnf-parser": "dfreeman/ebnf-parser#bc47c61",
     "lex-parser": "^0.1.4",
     "lodash": "^3.10.1"
   }
