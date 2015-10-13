@@ -1,0 +1,29 @@
+{
+  "name": "jison-modules",
+  "version": "0.1.0",
+  "description": "A Jison preprocessor for composing modular grammars",
+  "main": "index.js",
+  "scripts": {
+    "build": "for parser in src/*.y; do name=$(basename $parser .y); jison src/$name.{y,l} -o lib/parsers/$name.js; done",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dfreeman/jison-modules.git"
+  },
+  "author": "Dan Freeman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dfreeman/jison-modules/issues"
+  },
+  "homepage": "https://github.com/dfreeman/jison-modules#readme",
+  "devDependencies": {
+    "jison": "^0.4.15"
+  },
+  "dependencies": {
+    "core-object": "^1.1.0",
+    "ebnf-parser": "dfreeman/ebnf-parser#16ebe4f068cfa2227b03a41afca3d297bc02ee39",
+    "lex-parser": "^0.1.4",
+    "lodash": "^3.10.1"
+  }
+}
