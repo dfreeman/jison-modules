@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "for parser in src/*.y; do name=$(basename $parser .y); jison src/$name.{y,l} -o lib/parsers/$name.js; done",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -18,12 +18,13 @@
   },
   "homepage": "https://github.com/dfreeman/jison-modules#readme",
   "devDependencies": {
+    "eslint": "^1.6.0",
     "jison": "^0.4.15"
   },
   "dependencies": {
     "core-object": "^1.1.0",
     "ebnf-parser": "dfreeman/ebnf-parser#7084d17",
-    "lex-parser": "dfreeman/lex-parser#d6291c0",
+    "lex-parser": "dfreeman/lex-parser#58fd482",
     "lodash": "^3.10.1"
   }
 }

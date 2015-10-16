@@ -1,3 +1,8 @@
+'use strict';
+
+var transform = require('lodash/object/transform');
+
+var prefixify = require('./lib/utils/prefixify');
 var loadModuleGraph = require('./lib/load-module-graph');
 var validateDependencies = require('./lib/validate-dependencies');
 var rewriteModule = require('./lib/rewrite-module');
@@ -15,6 +20,23 @@ module.exports = {
       rewriteModule(module, exportMap);
     });
 
-    return composeGrammar(entryPath, modules);
+    var meta = buildMeta(modules);
+    var grammar = composeGrammar(entryPath, modules);
+
+    return { grammar: grammar, meta: meta };
   }
 };
+
+
+function buildMeta(modules) {
+  return {
+    modules: transform(modules, function(hash, module) {
+      hash[module.name] = {
+        prefix: prefixify(module.name),
+        exports: module.exports,
+        grammarDecls: module.grammarDecls,
+        lexiconDecls: module.lexiconDecls
+      };
+    }, {})
+  };
+}
