@@ -6,13 +6,13 @@
 '-'?\d+ return 'number';
 
 // Literals
-'%op'       return '%op';
-'['         return '[';
-']'         return ']';
-','         return ',';
-'left'      return 'left';
-'right'     return 'right';
-'nonassoc'  return 'nonassoc';
+'%precedence' return '%precedence';
+'['           return '[';
+']'           return ']';
+','           return ',';
+'left'        return 'left';
+'right'       return 'right';
+'nonassoc'    return 'nonassoc';
 
 // Strings
 '"'.*?'"' return 'string';
