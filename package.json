@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "for parser in src/*.y; do name=$(basename $parser .y); jison src/$name.{y,l} -o lib/parsers/$name.js; done",
-    "test": "eslint ."
+    "test": "eslint . && mocha 'tests/**/*-test.js'"
   },
   "repository": {
     "type": "git",
@@ -18,8 +18,10 @@
   },
   "homepage": "https://github.com/dfreeman/jison-modules#readme",
   "devDependencies": {
+    "chai": "^3.4.1",
     "eslint": "^1.6.0",
-    "jison": "^0.4.15"
+    "jison": "^0.4.15",
+    "mocha": "^2.3.4"
   },
   "dependencies": {
     "core-object": "^1.1.0",
