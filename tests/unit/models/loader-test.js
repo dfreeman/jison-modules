@@ -1,11 +1,11 @@
 'use strict';
 
 var assert = require('chai').assert;
-var Loader = require('../../../lib/models/loader');
+var TestLoader = require('../../helpers/test-loader');
 
 describe('Loader', function() {
   it('loads embedded lexicons', function() {
-    var result = new TestLoader().load('embeddedLexicon');
+    var result = new TestLoader({ modules: FIXTURES }).load('embeddedLexicon');
 
     // Don't bother double checking the embedded `lex` – that's not actually part of the interface
     delete result.grammar.lex;
@@ -27,7 +27,7 @@ describe('Loader', function() {
   });
 
   it('loads external lexicons', function() {
-    var result = new TestLoader().load('externalLexicon');
+    var result = new TestLoader({ modules: FIXTURES }).load('externalLexicon');
 
     assert.deepEqual(result.grammar, {
       bnf: {
@@ -46,43 +46,27 @@ describe('Loader', function() {
   });
 
   it('has a default implementation for resolvePath', function() {
-    var loader = new TestLoader();
+    var loader = new TestLoader({ modules: FIXTURES });
     assert.equal(loader.resolvePath('base', 'relative'), 'relative');
   });
 
   it('throws an exception for modules without a grammar', function() {
     assert.throws(function() {
-      new TestLoader().load('no-such-module');
+      new TestLoader({ modules: FIXTURES }).load('no-such-module');
     }, /unknown module/i);
   });
 
   it('allows modules without a lexicon', function() {
-    var result = new TestLoader().load('grammarOnly');
+    var result = new TestLoader({ modules: FIXTURES }).load('grammarOnly');
     assert.deepEqual(result.lexicon, undefined);
   });
 
   it('throws an exception if a module has both an embedded and external lexicon', function() {
     assert.throws(function() {
-      new TestLoader().load('doubleLexicon');
+      new TestLoader({ modules: FIXTURES }).load('doubleLexicon');
     }, /embedded and external/);
   });
 });
-
-var TestLoader = Loader.extend({
-  readLexicon: function(path) {
-    var mod = FIXTURES[path];
-    return mod && mod.l;
-  },
-
-  readGrammar: function(path) {
-    var mod = FIXTURES[path];
-    return mod && mod.y;
-  }
-});
-
-function trim(str) {
-  return str && str.trim();
-}
 
 var FIXTURES = {
   embeddedLexicon: {
@@ -93,32 +77,32 @@ var FIXTURES = {
       '/lex            ',
       '%%              ',
       'start: X;       '
-    ].map(trim).join('\n')
+    ]
   },
 
   externalLexicon: {
     l: [
       '%%              ',
       '[x] return "X"; '
-    ].map(trim).join('\n'),
+    ],
     y: [
       '%%              ',
       'start: X;       '
-    ].map(trim).join('\n')
+    ]
   },
 
   grammarOnly: {
     y: [
       '%%              ',
       'start: X;       '
-    ].map(trim).join('\n')
+    ]
   },
 
   doubleLexicon: {
     l: [
       '%%              ',
       '[x] return "X"; '
-    ].map(trim).join('\n'),
+    ],
     y: [
       '%lex            ',
       '%%              ',
@@ -126,6 +110,6 @@ var FIXTURES = {
       '/lex            ',
       '%%              ',
       'start: X;       '
-    ].map(trim).join('\n')
+    ]
   }
 };
