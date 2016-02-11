@@ -24,6 +24,22 @@ describe('Module', function() {
     }, /%precedence/);
   });
 
+  it('rejects grammars with multiple priorities declared', function() {
+    var options = loader.load('multiPriority');
+
+    assert.throws(function() {
+      return new Module(null, options);
+    }, /multiple priority declarations/i);
+  });
+
+  it('rejects a grammar with a non-numeric priority declaration', function() {
+    var options = loader.load('badPriority');
+
+    assert.throws(function() {
+      return new Module(null, options);
+    }, /invalid priority/i);
+  });
+
   it('assigns the global default priority when none is specified in the module', function() {
     var module = new Module(null, loader.load('noPriority'));
     assert.equal(module.priority, Module.DEFAULT_PRIORITY);
@@ -35,6 +51,7 @@ describe('Module', function() {
     var module = new Module(null, options);
     assert.equal(module.priority, 200);
   });
+
 
   it('extracts priority from the lexicon when specified', function() {
     var module = new Module(null, loader.load('explicitPriority'));
@@ -106,6 +123,31 @@ var loader = new TestLoader({
     explicitPriority: {
       l: [
         '%priority 10 ',
+        '%%           ',
+        'x return "x" '
+      ],
+      y: [
+        '%%        ',
+        'start: X; '
+      ]
+    },
+
+    multiPriority: {
+      l: [
+        '%priority 10 ',
+        '%priority 20 ',
+        '%%           ',
+        'x return "x" '
+      ],
+      y: [
+        '%%        ',
+        'start: X; '
+      ]
+    },
+
+    badPriority: {
+      l: [
+        '%priority xx ',
         '%%           ',
         'x return "x" '
       ],

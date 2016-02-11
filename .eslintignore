@@ -1,1 +1,2 @@
 lib/parsers/*.js
+coverage/**/*.js

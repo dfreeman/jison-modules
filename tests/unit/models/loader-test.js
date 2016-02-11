@@ -3,7 +3,31 @@
 var assert = require('chai').assert;
 var TestLoader = require('../../helpers/test-loader');
 
+var Loader = require('../../../lib/models/loader');
+
 describe('Loader', function() {
+  it('requires subclasses to implement readLexicon', function() {
+    var BadLoader = Loader.extend({
+      readGrammar: function() {
+        return '%%\nx:y;';
+      }
+    });
+
+    assert.throws(function() {
+      new BadLoader().load('test');
+    }, /implement `readLexicon`/);
+  });
+
+  it('requires subclasses to implment readGrammar', function() {
+    var BadLoader = Loader.extend({
+      readLexicon: function() {}
+    });
+
+    assert.throws(function() {
+      new BadLoader().load('test');
+    }, /implement `readGrammar`/);
+  });
+
   it('loads embedded lexicons', function() {
     var result = new TestLoader({ modules: FIXTURES }).load('embeddedLexicon');
 
