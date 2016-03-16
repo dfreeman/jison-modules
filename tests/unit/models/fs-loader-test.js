@@ -45,17 +45,17 @@ describe('FSLoader', function() {
 
     var loader = new FSLoader();
 
-    assert.equal(loader.resolvePath(null, 'shallowfile.y'), path.join(process.cwd(), 'shallowfile.y'));
+    assert.equal(loader.resolvePath(null, 'shallowfile.y'), 'shallowfile.y');
     assert.equal(loader.resolvePath('/shallowfile.y', './dir/midfile.y'), '/dir/midfile.y');
     assert.equal(loader.resolvePath('/dir/midfile.y', './subdir/deepfile.y'), '/dir/subdir/deepfile.y');
     assert.equal(loader.resolvePath('/dir/subdir/deepfile.y', '../../shallowfile.y'), '/shallowfile.y');
     assert.equal(loader.resolvePath('/dir/midfile.y', '/shallowfile.y'), '/shallowfile.y');
   });
 
-  it('resolves root paths relative to the configured baseDirectory when specified', function() {
+  it('honors the configured baseDirectory if present', function() {
     mockFS({
-      'shallowfile.y': 'shallow grammar',
-      dir: {
+      '/shallowfile.y': 'shallow grammar',
+      '/dir': {
         'midfile.y': 'mid grammar',
         subdir: {
           'deepfile.y': 'deep grammar'
@@ -65,10 +65,26 @@ describe('FSLoader', function() {
 
     var loader = new FSLoader({ baseDirectory: '/dir' });
 
-    assert.equal(loader.resolvePath(null, 'midfile.y'), 'midfile.y');
-    assert.equal(loader.resolvePath('/shallowfile.y', 'midfile.y'), 'midfile.y');
-    assert.equal(loader.resolvePath('/dir/midfile.y', 'subdir/deepfile.y'), 'subdir/deepfile.y');
-    assert.equal(loader.resolvePath('/dir/subdir/deepfile.y', '../../shallowfile.y'), '/shallowfile.y');
-    assert.equal(loader.resolvePath('/dir/midfile.y', '/shallowfile.y'), '/shallowfile.y');
+    assert.equal(read(loader, { path: '../shallowfile', from: '/dir/midfile.y' }), 'shallow grammar');
+    assert.equal(read(loader, { path: 'subdir/deepfile', from: '/dir/midfile.y' }), 'deep grammar');
+    assert.equal(read(loader, { path: '../../shallowfile', from: '/dir/subdir/deepfile.y' }), 'shallow grammar');
+    assert.equal(read(loader, { path: '/shallowfile', from: '/dir/midfile.y' }), 'shallow grammar');
+    assert.equal(read(loader, { path: 'midfile', from : '/shallowfile.y' }), 'mid grammar');
+    assert.equal(read(loader, { path: 'midfile', from : '/dir/subdir/deepfile.y' }), 'mid grammar');
+    assert.equal(read(loader, { path: 'subdir/deepfile', from: '/dir/midfile.y' }), 'deep grammar');
+  });
+
+  it('uses the current working directory as the base directory if not otherwise specified', function() {
+    var files = { '/root.y': 'root grammar' };
+    files[path.join(process.cwd(), 'cwd.y')] = 'cwd grammar';
+    mockFS(files);
+
+    var loader = new FSLoader();
+
+    assert.equal(read(loader, { path: 'cwd', from: '/root.y' }), 'cwd grammar');
   });
 });
+
+function read(loader, options) {
+  return loader.readGrammar(loader.resolvePath(options.from, options.path));
+}
