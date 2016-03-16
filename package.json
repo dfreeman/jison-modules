@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "for parser in src/*.y; do name=$(basename $parser .y); jison src/$name.{y,l} -o lib/parsers/$name.js; done",
-    "test": "eslint . && istanbul cover _mocha 'tests/**/*-test.js'",
-    "watch": "mocha --watch 'tests/**/*-test.js'",
+    "test": "eslint . && istanbul cover _mocha 'tests/**/*-test.js' tests/acceptance.js",
+    "watch": "mocha --watch 'tests/**/*-test.js' tests/acceptance.js --watch-extensions l,y",
     "report-coverage": "istanbul-coveralls"
   },
   "repository": {
@@ -25,7 +25,8 @@
     "istanbul": "^0.4.2",
     "istanbul-coveralls": "^1.0.3",
     "jison": "^0.4.15",
-    "mocha": "^2.3.4"
+    "mocha": "^2.3.4",
+    "mock-fs": "^3.7.0"
   },
   "dependencies": {
     "core-object": "^1.1.0",

@@ -111,8 +111,8 @@ describe('rewriteModule', function() {
       ],
       grammar: {
         bnf: {
-          foo: ['bar', 'baz qux', ''],
-          bar: [['x', { prec: 'fiddle' }]],
+          foo: ['bar', ['baz qux', 'return true;'], ''],
+          bar: [['x', 'return false;', { prec: 'fiddle' }]],
           baz: ['foo', ['bar', { prec: 'foo' }]]
         }
       }
@@ -128,8 +128,8 @@ describe('rewriteModule', function() {
     });
 
     assert.deepEqual(mod.grammar.bnf, {
-      dir$mod__foo: ['dir$mod__bar', 'dir$mod__baz dir$child$another__yyy', ''],
-      dir$mod__bar: [['dir$mod__x', { prec: 'dir$child$other__internal' }]],
+      dir$mod__foo: ['dir$mod__bar', ['dir$mod__baz dir$child$another__yyy', 'return true;'], ''],
+      dir$mod__bar: [['dir$mod__x', 'return false;', { prec: 'dir$child$other__internal' }]],
       dir$mod__baz: ['dir$mod__foo', ['dir$mod__bar', { prec: 'dir$mod__foo' }]]
     });
   });
