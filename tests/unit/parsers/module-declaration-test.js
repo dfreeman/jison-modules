@@ -50,6 +50,14 @@ describe('ModuleDeclarationParser', function() {
     });
   });
 
+  it('parses bindingless imports', function() {
+    assert.deepEqual(parse('%import "fizzbuzz"'), {
+      type: 'Import',
+      module: 'fizzbuzz',
+      bindings: []
+    });
+  });
+
   it('parses named imports', function() {
     assert.deepEqual(parse('%import { foo, bar as baz } from "fizzbuzz"'), {
       type: 'Import',

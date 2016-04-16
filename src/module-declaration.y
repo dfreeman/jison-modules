@@ -17,7 +17,9 @@ Export
   ;
 
 Import
-  : '%import' Bindings 'from' String
+  : '%import' String
+    -> { type: 'Import', bindings: [], module: $String }
+  | '%import' Bindings 'from' String
     -> { type: 'Import', bindings: $Bindings, module: $String }
   | '%import' 'lex' NamedBindings 'from' String
     -> { type: 'Import', lexical: true, bindings: $NamedBindings, module: $String }
