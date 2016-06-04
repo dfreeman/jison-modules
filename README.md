@@ -2,7 +2,18 @@
 
 ## Introduction
 
-A Jison preprocessor for composing a single grammar from modularized grammar/lexicon subcomponents.
+This tool is a Jison preprocessor for composing a single grammar from modularized grammar/lexicon subcomponents.
+
+## Declarations
+### `%import` and `%export`
+### `%import lex` and `%export lex`
+### `%priority`
+### `%precedence`
+
+## API
+### `load(entryPath, loader, options)`
+### The `Loader` interface
+### Metadata
 
 ## Building
 

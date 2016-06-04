@@ -24,7 +24,7 @@ describe('rewriteModule', function() {
           bar: 0
         },
         rules: [
-          [['foo', 'bar'], 'x', 'return']
+          [['INITIAL', 'foo', 'bar'], 'x', 'return']
         ]
       }
     });
@@ -37,7 +37,7 @@ describe('rewriteModule', function() {
     });
 
     assert.deepEqual(mod.lexicon.rules, [
-      [['dir$mod__foo', 'dir$mod__bar'], 'x', 'return jisonModules_prefix(this, "dir$mod__", function() {\nreturn\n});']
+      [['INITIAL', 'dir$mod__foo', 'dir$mod__bar'], 'x', 'return jisonModules_prefix(this, "dir$mod__", function() {\nreturn\n});']
     ]);
   });
 

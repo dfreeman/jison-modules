@@ -8,102 +8,115 @@ var pick = require('lodash/object/pick');
 
 describe('Module', function() {
   it('knows its name and raw grammar and lexicon definitions', function() {
-    var options = loader.load('explicitPriority');
-    var module = new Module('module-name', options);
+    return loader.load('explicitPriority').then(function(options) {
+      var module = new Module('module-name', options);
 
-    assert.equal(module.name, 'module-name');
-    assert.equal(module.grammar, options.grammar);
-    assert.equal(module.lexicon, options.lexicon);
+      assert.equal(module.name, 'module-name');
+      assert.equal(module.grammar, options.grammar);
+      assert.equal(module.lexicon, options.lexicon);
+    });
   });
 
   it('rejects grammars with unprioritized operators', function() {
-    var options = loader.load('unprioritizedOperators');
-
-    assert.throws(function() {
-      return new Module(null, options);
-    }, /%precedence/);
+    return loader.load('unprioritizedOperators').then(function(options) {
+      assert.throws(function() {
+        return new Module(null, options);
+      }, /%precedence/);
+    });
   });
 
   it('rejects grammars with multiple priorities declared', function() {
-    var options = loader.load('multiPriority');
-
-    assert.throws(function() {
-      return new Module(null, options);
-    }, /multiple priority declarations/i);
+    return loader.load('multiPriority').then(function(options) {
+      assert.throws(function() {
+        return new Module(null, options);
+      }, /multiple priority declarations/i);
+    });
   });
 
   it('rejects a grammar with a non-numeric priority declaration', function() {
-    var options = loader.load('badPriority');
-
-    assert.throws(function() {
-      return new Module(null, options);
-    }, /invalid priority/i);
+    return loader.load('badPriority').then(function(options) {
+      assert.throws(function() {
+        return new Module(null, options);
+      }, /invalid priority/i);
+    });
   });
 
   it('assigns the global default priority when none is specified in the module', function() {
-    var module = new Module(null, loader.load('noPriority'));
-    assert.equal(module.priority, Module.DEFAULT_PRIORITY);
+    return loader.load('noPriority').then(function(options) {
+      var module = new Module(null, options);
+      assert.equal(module.priority, Module.DEFAULT_PRIORITY);
+    });
   });
 
   it('assigns a configured default priority when none is specified in the module', function() {
-    var options = loader.load('noPriority');
-    options.defaultPriority = 200;
-    var module = new Module(null, options);
-    assert.equal(module.priority, 200);
+    return loader.load('noPriority').then(function(options) {
+      options.defaultPriority = 200;
+      var module = new Module(null, options);
+      assert.equal(module.priority, 200);
+    });
   });
 
-
   it('extracts priority from the lexicon when specified', function() {
-    var module = new Module(null, loader.load('explicitPriority'));
-    assert.equal(module.priority, 10);
+    return loader.load('explicitPriority').then(function(options) {
+      var module = new Module(null, options);
+      assert.equal(module.priority, 10);
+    });
   });
 
   it('extracts unknown grammar and lexicon declarations', function() {
-    var module = new Module(null, loader.load('unknownDecls'));
-    assert.deepEqual(module.lexiconDecls, ['%foo bar']);
-    assert.deepEqual(module.grammarDecls, ['%baz qux']);
+    return loader.load('unknownDecls').then(function(options) {
+      var module = new Module(null, options);
+      assert.deepEqual(module.lexiconDecls, ['%foo bar']);
+      assert.deepEqual(module.grammarDecls, ['%baz qux']);
+    });
   });
 
   it('extracts import declarations from the grammar', function() {
-    var module = new Module(null, loader.load('imports'));
-    var imports = module.imports.map(function(imp) {
-      return pick(imp, 'module', 'source', 'binding', 'lexical');
-    });
+    return loader.load('imports').then(function(options) {
+      var module = new Module(null, options);
+      var imports = module.imports.map(function(imp) {
+        return pick(imp, 'module', 'source', 'binding', 'lexical');
+      });
 
-    assert.deepEqual(imports, [
-      { module: 'qux', source: 'default', binding: 'foo', lexical: false },
-      { module: 'qux', source: 'bar', binding: 'baz', lexical: false },
-      { module: 'xyz', source: 'abc', binding: 'abc', lexical: false },
-      { module: 'other', source: 'x', binding: 'x', lexical: true },
-      { module: 'other', source: 'y', binding: 'z', lexical: true }
-    ]);
+      assert.deepEqual(imports, [
+        { module: 'qux', source: 'default', binding: 'foo', lexical: false },
+        { module: 'qux', source: 'bar', binding: 'baz', lexical: false },
+        { module: 'xyz', source: 'abc', binding: 'abc', lexical: false },
+        { module: 'other', source: 'x', binding: 'x', lexical: true },
+        { module: 'other', source: 'y', binding: 'z', lexical: true }
+      ]);
+    });
   });
 
   it('extracts export declarations from the grammar', function() {
-    var module = new Module(null, loader.load('exports'));
-    var exports = module.exports.map(function(exp) {
-      return pick(exp, 'source', 'binding', 'lexical');
-    });
+    return loader.load('exports').then(function(options) {
+      var module = new Module(null, options);
+      var exports = module.exports.map(function(exp) {
+        return pick(exp, 'source', 'binding', 'lexical');
+      });
 
-    assert.deepEqual(exports, [
-      { source: 'foo', binding: 'default', lexical: false },
-      { source: 'a', binding: 'a', lexical: false },
-      { source: 'b', binding: 'c', lexical: false },
-      { source: 'x', binding: 'x', lexical: true },
-      { source: 'y', binding: 'z', lexical: true }
-    ]);
+      assert.deepEqual(exports, [
+        { source: 'foo', binding: 'default', lexical: false },
+        { source: 'a', binding: 'a', lexical: false },
+        { source: 'b', binding: 'c', lexical: false },
+        { source: 'x', binding: 'x', lexical: true },
+        { source: 'y', binding: 'z', lexical: true }
+      ]);
+    });
   });
 
   it('extracts precedence declarations from the grammar', function() {
-    var module = new Module(null, loader.load('precedence'));
-    var precedence = module.precedence.map(function(prec) {
-      return pick(prec, 'priority', 'associativity', 'tokens');
-    });
+    return loader.load('precedence').then(function(options) {
+      var module = new Module(null, options);
+      var precedence = module.precedence.map(function(prec) {
+        return pick(prec, 'priority', 'associativity', 'tokens');
+      });
 
-    assert.deepEqual(precedence, [
-      { priority: 5, associativity: 'left', tokens: ['foo'] },
-      { priority: 4, associativity: 'right', tokens: ['bar baz', 'qux'] }
-    ]);
+      assert.deepEqual(precedence, [
+        { priority: 5, associativity: 'left', tokens: ['foo'] },
+        { priority: 4, associativity: 'right', tokens: ['bar baz', 'qux'] }
+      ]);
+    });
   });
 });
 

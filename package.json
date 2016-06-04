@@ -21,6 +21,7 @@
   "homepage": "https://github.com/dfreeman/jison-modules#readme",
   "devDependencies": {
     "chai": "^3.4.1",
+    "chai-as-promised": "^5.3.0",
     "eslint": "^1.6.0",
     "istanbul": "^0.4.2",
     "istanbul-coveralls": "^1.0.3",
@@ -32,6 +33,7 @@
     "core-object": "^1.1.0",
     "ebnf-parser": "dfreeman/ebnf-parser#7084d17",
     "lex-parser": "dfreeman/lex-parser#58fd482",
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "promise": "^7.1.1"
   }
 }

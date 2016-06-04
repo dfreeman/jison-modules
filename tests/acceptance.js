@@ -4,6 +4,8 @@ var fs = require('fs');
 var path = require('path');
 var assert = require('chai').assert;
 
+require('chai').use(require('chai-as-promised'));
+
 var Jison = require('jison');
 var JisonModules = require('..');
 
@@ -15,24 +17,22 @@ describe('Acceptance tests', function() {
 
     it(expectation.description, function() {
       if (expectation.loadError) {
-        assert.throws(function() {
-          loadTestGrammar(test, expectation);
-        }, expectation.loadError);
-        return;
+        return assert.isRejected(loadTestGrammar(test, expectation), expectation.loadError);
       }
 
-      var loaded = loadTestGrammar(test, expectation);
-      if (expectation.meta) {
-        assert.deepEqual(loaded.meta, expectation.meta);
-      }
+      return loadTestGrammar(test, expectation).then(function(loaded) {
+        if (expectation.meta) {
+          assert.deepEqual(loaded.meta, expectation.meta);
+        }
 
-      if (expectation.parseResult) {
-        assert.deepEqual(parseTestInput(test, loaded.grammar), expectation.parseResult);
-      } else if (expectation.parseError) {
-        assert.throws(function() {
-          parseTestInput(test, loaded.grammar);
-        }, expectation.parseError);
-      }
+        if (expectation.parseResult) {
+          assert.deepEqual(parseTestInput(test, loaded.grammar), expectation.parseResult);
+        } else if (expectation.parseError) {
+          assert.throws(function() {
+            parseTestInput(test, loaded.grammar);
+          }, expectation.parseError);
+        }
+      });
     });
   });
 });

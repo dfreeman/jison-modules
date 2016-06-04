@@ -3,6 +3,8 @@
 var assert = require('chai').assert;
 var TestLoader = require('../../helpers/test-loader');
 
+require('chai').use(require('chai-as-promised'));
+
 var Loader = require('../../../lib/models/loader');
 
 describe('Loader', function() {
@@ -13,9 +15,7 @@ describe('Loader', function() {
       }
     });
 
-    assert.throws(function() {
-      new BadLoader().load('test');
-    }, /implement `readLexicon`/);
+    return assert.isRejected(new BadLoader().load('test'), /implement `readLexicon`/);
   });
 
   it('requires subclasses to implment readGrammar', function() {
@@ -23,49 +23,47 @@ describe('Loader', function() {
       readLexicon: function() {}
     });
 
-    assert.throws(function() {
-      new BadLoader().load('test');
-    }, /implement `readGrammar`/);
+    return assert.isRejected(new BadLoader().load('test'), /implement `readGrammar`/);
   });
 
   it('loads embedded lexicons', function() {
-    var result = new TestLoader({ modules: FIXTURES }).load('embeddedLexicon');
+    return new TestLoader({ modules: FIXTURES }).load('embeddedLexicon').then(function(result) {
+      // Don't bother double checking the embedded `lex` – that's not actually part of the interface
+      delete result.grammar.lex;
 
-    // Don't bother double checking the embedded `lex` – that's not actually part of the interface
-    delete result.grammar.lex;
+      assert.deepEqual(result.grammar, {
+        bnf: {
+          start: ['X']
+        }
+      });
 
-    assert.deepEqual(result.grammar, {
-      bnf: {
-        start: ['X']
-      }
-    });
-
-    assert.deepEqual(result.lexicon, {
-      rules: [
-        [
-          '[x]',
-          'return "X";'
+      assert.deepEqual(result.lexicon, {
+        rules: [
+          [
+            '[x]',
+            'return "X";'
+          ]
         ]
-      ]
+      });
     });
   });
 
   it('loads external lexicons', function() {
-    var result = new TestLoader({ modules: FIXTURES }).load('externalLexicon');
+    return new TestLoader({ modules: FIXTURES }).load('externalLexicon').then(function(result) {
+      assert.deepEqual(result.grammar, {
+        bnf: {
+          start: ['X']
+        }
+      });
 
-    assert.deepEqual(result.grammar, {
-      bnf: {
-        start: ['X']
-      }
-    });
-
-    assert.deepEqual(result.lexicon, {
-      rules: [
-        [
-          '[x]',
-          'return "X";'
+      assert.deepEqual(result.lexicon, {
+        rules: [
+          [
+            '[x]',
+            'return "X";'
+          ]
         ]
-      ]
+      });
     });
   });
 
@@ -75,20 +73,17 @@ describe('Loader', function() {
   });
 
   it('throws an exception for modules without a grammar', function() {
-    assert.throws(function() {
-      new TestLoader({ modules: FIXTURES }).load('no-such-module');
-    }, /unknown module/i);
+    return assert.isRejected(new TestLoader({ modules: FIXTURES }).load('no-such-module'), /unknown module/i);
   });
 
   it('allows modules without a lexicon', function() {
-    var result = new TestLoader({ modules: FIXTURES }).load('grammarOnly');
-    assert.deepEqual(result.lexicon, undefined);
+    return new TestLoader({ modules: FIXTURES }).load('grammarOnly').then(function(result) {
+      assert.deepEqual(result.lexicon, undefined);
+    });
   });
 
   it('throws an exception if a module has both an embedded and external lexicon', function() {
-    assert.throws(function() {
-      new TestLoader({ modules: FIXTURES }).load('doubleLexicon');
-    }, /embedded and external/);
+    return assert.isRejected(new TestLoader({ modules: FIXTURES }).load('doubleLexicon'), /embedded and external/);
   });
 });
 

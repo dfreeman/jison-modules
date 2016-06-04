@@ -9,25 +9,29 @@ var loadModuleGraph = require('../../lib/load-module-graph');
 
 describe('loadModuleGraph', function() {
   it('handles an entry module with no imports', function() {
-    var modules = loadModuleGraph('noImports', loader);
-    assert.deepEqual(map(modules, 'name'), ['noImports']);
-    assert.deepEqual(map(modules, 'priority'), [Module.DEFAULT_PRIORITY]);
+    return loadModuleGraph('noImports', loader).then(function(modules) {
+      assert.deepEqual(map(modules, 'name'), ['noImports']);
+      assert.deepEqual(map(modules, 'priority'), [Module.DEFAULT_PRIORITY]);
+    });
   });
 
   it('passes options through to the constructed modules', function() {
-    var modules = loadModuleGraph('noImports', loader, { defaultPriority: -1 });
-    assert.deepEqual(map(modules, 'name'), ['noImports']);
-    assert.deepEqual(map(modules, 'priority'), [-1]);
+    return loadModuleGraph('noImports', loader, { defaultPriority: -1 }).then(function(modules) {
+      assert.deepEqual(map(modules, 'name'), ['noImports']);
+      assert.deepEqual(map(modules, 'priority'), [-1]);
+    });
   });
 
   it('loads modules referenced via import', function() {
-    var modules = loadModuleGraph('entry', loader);
-    assert.deepEqual(map(modules, 'name'), ['entry', 'intermediate', 'noImports']);
+    return loadModuleGraph('entry', loader).then(function(modules) {
+      assert.deepEqual(map(modules, 'name'), ['entry', 'intermediate', 'noImports']);
+    });
   });
 
   it('only loads referenced modules once', function() {
-    var modules = loadModuleGraph('multiInclude', loader);
-    assert.deepEqual(map(modules, 'name'), ['multiInclude', 'intermediate', 'entry', 'noImports']);
+    return loadModuleGraph('multiInclude', loader).then(function(modules) {
+      assert.deepEqual(map(modules, 'name'), ['multiInclude', 'intermediate', 'entry', 'noImports']);
+    });
   });
 });
 
