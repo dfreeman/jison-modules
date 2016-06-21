@@ -12,6 +12,7 @@ This tool is a Jison preprocessor for composing a single grammar from modularize
 
 ## API
 ### `load(entryPath, loader, options)`
+#### `preprocess`
 ### The `Loader` interface
 ### Metadata
 
