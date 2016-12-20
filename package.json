@@ -1,6 +1,6 @@
 {
   "name": "jison-modules",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Jison preprocessor for composing modular grammars",
   "main": "index.js",
   "scripts": {
