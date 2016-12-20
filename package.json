@@ -20,19 +20,19 @@
   },
   "homepage": "https://github.com/dfreeman/jison-modules#readme",
   "devDependencies": {
-    "chai": "^3.4.1",
-    "chai-as-promised": "^5.3.0",
+    "chai": "4.0.0-canary.1",
+    "chai-as-promised": "^6.0.0",
     "eslint": "^1.6.0",
     "istanbul": "^0.4.2",
     "istanbul-coveralls": "^1.0.3",
     "jison": "^0.4.15",
-    "mocha": "^2.3.4",
+    "mocha": "^3.2.0",
     "mock-fs": "^3.7.0"
   },
   "dependencies": {
     "core-object": "^1.1.0",
     "ebnf-parser": "dfreeman/ebnf-parser#7084d17",
-    "lex-parser": "dfreeman/lex-parser#58fd482",
+    "lex-parser": "dfreeman/lex-parser#f89d1d5",
     "lodash": "^3.10.1",
     "promise": "^7.1.1"
   }
