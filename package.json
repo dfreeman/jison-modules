@@ -1,6 +1,6 @@
 {
   "name": "jison-modules",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A Jison preprocessor for composing modular grammars",
   "main": "index.js",
   "scripts": {
@@ -29,6 +29,10 @@
     "mocha": "^3.2.0",
     "mock-fs": "^3.7.0"
   },
+  "bundledDependencies": [
+    "ebnf-parser",
+    "lex-parser"
+  ],
   "dependencies": {
     "core-object": "^1.1.0",
     "ebnf-parser": "dfreeman/ebnf-parser#06466a1",
