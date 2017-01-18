@@ -13,17 +13,6 @@ describe('ModuleDeclarationParser', function() {
     });
   });
 
-  it('parses lexical exports', function() {
-    assert.deepEqual(parse('%export lex { x, y as z }'), {
-      type: 'Export',
-      lexical: true,
-      bindings: [
-        { source: 'x', binding: 'x' },
-        { source: 'y', binding: 'z' }
-      ]
-    });
-  });
-
   it('parses named exports', function() {
     assert.deepEqual(parse('%export { foo as bar, baz }'), {
       type: 'Export',
@@ -31,12 +20,6 @@ describe('ModuleDeclarationParser', function() {
         { source: 'foo', binding: 'bar' },
         { source: 'baz', binding: 'baz' }
       ]
-    });
-  });
-
-  it('rejects named lexical exports', function() {
-    assert.throws(function() {
-      parse('%export default lex foo');
     });
   });
 
@@ -77,24 +60,6 @@ describe('ModuleDeclarationParser', function() {
         { source: 'default', binding: 'foo' },
         { source: 'bar', binding: 'bar' }
       ]
-    });
-  });
-
-  it('parses lexical imports', function() {
-    assert.deepEqual(parse('%import lex { x, y as z } from "supercool"'), {
-      type: 'Import',
-      lexical: true,
-      module: 'supercool',
-      bindings: [
-        { source: 'x', binding: 'x' },
-        { source: 'y', binding: 'z' }
-      ]
-    });
-  });
-
-  it('rejects default lexical imports', function() {
-    assert.throws(function() {
-      parse('%import lex foo from "bar"');
     });
   });
 });

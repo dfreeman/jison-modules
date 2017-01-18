@@ -6,7 +6,10 @@ This tool is a Jison preprocessor for composing a single grammar from modularize
 
 ## Declarations
 ### `%import` and `%export`
-### `%import lex` and `%export lex`
+- grammar rules
+- lexical tokens
+- lexical macros
+- lexical conditions?
 ### `%priority`
 ### `%precedence`
 

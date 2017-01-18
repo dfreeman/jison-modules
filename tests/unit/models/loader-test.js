@@ -72,13 +72,21 @@ describe('Loader', function() {
     assert.equal(loader.resolvePath('base', 'relative'), 'relative');
   });
 
-  it('throws an exception for modules without a grammar', function() {
-    return assert.isRejected(new TestLoader({ modules: FIXTURES }).load('no-such-module'), /unknown module/i);
+  it('throws an exception for modules without a grammar or lexicon', function() {
+    return assert.isRejected(new TestLoader({ modules: FIXTURES }).load('no-such-module'), /no grammar or lexicon found/i);
   });
 
   it('allows modules without a lexicon', function() {
     return new TestLoader({ modules: FIXTURES }).load('grammarOnly').then(function(result) {
-      assert.deepEqual(result.lexicon, undefined);
+      assert.ok('lexicon' in result);
+      assert.equal(result.lexicon, undefined);
+    });
+  });
+
+  it('allows modules without a grammar', function() {
+    return new TestLoader({ modules: FIXTURES }).load('lexiconOnly').then(function(result) {
+      assert.ok('grammar' in result);
+      assert.equal(result.grammar, undefined);
     });
   });
 
@@ -114,6 +122,13 @@ var FIXTURES = {
     y: [
       '%%              ',
       'start: X;       '
+    ]
+  },
+
+  lexiconOnly: {
+    l: [
+      '%%              ',
+      '[x] return "X"; '
     ]
   },
 

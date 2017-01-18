@@ -10,8 +10,6 @@ Start
 Export
   : '%export' 'default' id
     -> { type: 'Export', bindings: [{ source: $id, binding: 'default' }] }
-  | '%export' 'lex' NamedBindings
-    -> { type: 'Export', lexical: true, bindings: $NamedBindings }
   | '%export' NamedBindings
     -> { type: 'Export', bindings: $NamedBindings }
   ;
@@ -21,8 +19,6 @@ Import
     -> { type: 'Import', bindings: [], module: $String }
   | '%import' Bindings 'from' String
     -> { type: 'Import', bindings: $Bindings, module: $String }
-  | '%import' 'lex' NamedBindings 'from' String
-    -> { type: 'Import', lexical: true, bindings: $NamedBindings, module: $String }
   ;
 
 Bindings

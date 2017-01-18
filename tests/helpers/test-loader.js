@@ -15,7 +15,7 @@ module.exports = Loader.extend({
 });
 
 function text(lines) {
-  if (!lines) return lines;
+  if (!lines || !lines.map) return undefined;
 
   return lines.map(function(string) {
     return string.trim();

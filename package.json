@@ -31,8 +31,8 @@
   },
   "dependencies": {
     "core-object": "^1.1.0",
-    "ebnf-parser": "dfreeman/ebnf-parser#7084d17",
-    "lex-parser": "dfreeman/lex-parser#f89d1d5",
+    "ebnf-parser": "dfreeman/ebnf-parser#06466a1",
+    "lex-parser": "dfreeman/lex-parser#0218438",
     "lodash": "^3.10.1",
     "promise": "^7.1.1"
   }

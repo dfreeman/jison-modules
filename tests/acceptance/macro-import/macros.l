@@ -1,0 +1,3 @@
+%export { DIGIT }
+
+DIGIT \d

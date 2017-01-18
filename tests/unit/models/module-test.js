@@ -183,21 +183,33 @@ var loader = new TestLoader({
       ]
     },
 
-    imports: [
-      '%import foo, { bar as baz } from "qux" ',
-      '%import { abc } from "xyz"             ',
-      '%import lex { x, y as z } from "other" ',
-      '%%                                     ',
-      'start: X;                              '
-    ],
+    imports: {
+      l: [
+        '%import { x, y as z } from "other" ',
+        '%%                                 ',
+        'a return "a";                      '
+      ],
+      y: [
+        '%import foo, { bar as baz } from "qux" ',
+        '%import { abc } from "xyz"             ',
+        '%%                                     ',
+        'start: X;                              '
+      ]
+    },
 
-    exports: [
-      '%export default foo       ',
-      '%export { a, b as c }     ',
-      '%export lex { x, y as z } ',
-      '%%                        ',
-      'start: X;                 '
-    ],
+    exports: {
+      l: [
+        '%export { x, y as z } ',
+        '%%                    ',
+        'a return "a";         '
+      ],
+      y: [
+        '%export default foo       ',
+        '%export { a, b as c }     ',
+        '%%                        ',
+        'start: X;                 '
+      ]
+    },
 
     precedence: [
       '%precedence[left, 5] foo            ',

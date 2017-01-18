@@ -11,7 +11,6 @@
 'from'    return 'from';
 'as'      return 'as';
 'default' return 'default';
-'lex'     return 'lex';
 
 // Strings
 '"'.*?'"' return 'string';

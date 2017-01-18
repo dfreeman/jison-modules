@@ -52,15 +52,16 @@ describe('composeGrammar', function() {
 
   it('pulls start conditions from all constituent lexicons', function() {
     var result = composeGrammar('a', [
-      testModule('a', { priority: 10, lexicon: { startConditions: { foo: 'bar' } } }),
-      testModule('b', { priority: 20, lexicon: { startConditions: { baz: 'qux', fizz: 'buzz' } } }),
+      testModule('a', { priority: 10, lexicon: { startConditions: { foo: 0, bar: 0 } } }),
+      testModule('b', { priority: 20, lexicon: { startConditions: { baz: 0, fizz: 1 } } }),
       testModule('c', { priority: 30 })
     ]);
 
     assert.deepEqual(result.lex.startConditions, {
-      foo: 'bar',
-      baz: 'qux',
-      fizz: 'buzz'
+      foo: 0,
+      bar: 0,
+      baz: 0,
+      fizz: 1
     });
   });
 
